@@ -1,0 +1,56 @@
+/*
+ d ebug: GTK_DEBUG=interactive ghostty              *
+ https://docs.gtk.org/gtk4/css-overview.html
+ https://docs.gtk.org/gtk4/css-properties.html
+ */
+
+headerbar {
+    height: 10px;
+    padding: 0;
+    margin: 0;
+    background-color: #8aaaaa;
+}
+
+headerbar button {
+    background-color: #aaaa88;
+    margin: 0;
+    border: 1px solid black;
+}
+
+headerbar button image {
+    background-color: orange;
+    padding: 0;
+    margin: 0;
+}
+
+tabbox {
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+
+tabbox tab {
+    margin: 0;
+    padding: 0;
+    color: #00000f;
+    background-color: #99aaaa;
+    border-right: 1px solid #374151;
+}
+
+tabbox tab label {
+    font-size: 12px;
+    border: 1px solid blue;
+    margin: 0;
+    padding: 0;
+}
+
+tabbox tab:checked  { background-color: #98ee98; }
+
+tabbox tab:default  { background-color: #ac2d0d; }
+tabbox tab:target   { background-color: #ac6d2d; }
+tabbox tab:disabled { background-color: #ac0d7d; }
+tabbox tab:enabled  { background-color: #0c2ded; }
+tabbox tab:hover    { background-color: #ac2ded; }
+tabbox tab:focus    { background-color: #aced0d; }
+tabbox tab:active   { background-color: #2caded; }
+tabbox tab:selected { background-color: #ac2d2d; }
