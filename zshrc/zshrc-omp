@@ -31,9 +31,13 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
+zinit light ntnyq/omz-plugin-pnpm
+
+zinit light wfxr/forgit # Interactive git commands with fzf
+zinit light MichaelAquilina/zsh-you-should-use # Alias reminders
 
 # Add in snippets
-zinit snippet OMZL::git.zsh
+# zinit snippet OMZL::git.zsh
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::archlinux
@@ -41,6 +45,19 @@ zinit snippet OMZP::aws
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
+zinit snippet OMZP::docker
+zinit snippet OMZP::podman
+zinit snippet OMZP::github
+zinit snippet OMZP::mongo-atlas
+zinit snippet OMZP::mongocli
+zinit snippet OMZP::node
+zinit snippet OMZP::postgres
+zinit snippet OMZP::python
+zinit snippet OMZP::tmux
+
+# Load bun completions using its own generator
+zinit snippet OMZP::bun
+# zinit snippet OMZ::pnpm
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -74,48 +91,26 @@ setopt hist_find_no_dups
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+# zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# === UPDATED FZF-TAB PREVIEW using eza ===
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --icons --tree --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --icons --tree --color=always $realpath'
 
 # Aliases
 alias z="cd"
-alias ls='ls --color'
+# === UPDATED LS ALIASES using eza ===
+alias ls='eza --icons --git'
+alias ll='eza --icons --git -l' # long format
+alias la='eza --icons --git -la' # long format, all files
+alias lt='eza --icons --git --tree' # tree view
 alias vim='nvim'
 alias c='clear'
-# Add
-alias ga='git add'
-alias gaa='git add --all'
-# Diff
-alias gd='git diff'
-# Grep/Search
-alias gsearch='git grep'
-alias ggrep='git grep'
-# Merge
-alias gm='git merge'
-# Branch
-alias gb='git branch'
-# Status
-alias gs='git status'
-# Commit
-alias gc='git commit -m'
-# Remote
-alias gr='git remote'
-# Pull
-alias gl='git pull'
-# Push
-alias gp='git push'
-# init
-alias gi='git init'
-# clone
-alias gclone='git clone'
-# checkout
-alias gco='git checkout'
-# stash
-alias gstash='git stash'
-# help
-alias ghh="git help"
+
 #oh my posh
 alias omp="oh-my-posh"
+
 # fastfetch
 alias ff="fastfetch"
 
@@ -144,6 +139,35 @@ alias sr="reboot"
 alias btrfsfs="sudo btrfs filesystem df /"
 alias btrfsli="sudo btrfs su li / -t"
 
+# Package management - npm
+alias ni='npm i'
+alias nid='npm i -D'
+alias nig='npm i -g'
+alias nr='npm run'
+alias nrb='npm run build'
+alias nrd='npm run dev'
+alias nrs='npm run start'
+alias nlg='npm list -g --depth=0'
+
+# Package management - yarn
+alias ya='yarn add'
+alias yad='yarn add -D'
+alias yb='yarn build'
+alias yd='yarn dev'
+alias ys='yarn start'
+alias yyb='yarn && yarn build'
+alias yyd='yarn && yarn dev'
+alias ylg='yarn global list'
+
+# Package management - pnpm
+alias pi='pnpm i'
+alias pid='pnpm i -D'
+alias prb='pnpm run build'
+alias prd='pnpm run dev'
+alias prs='pnpm run start'
+alias plg='pnpm list -g --depth=0'
+alias pc='pnpm create'
+
 
 # Shell integrations
 eval "$(fzf --zsh)"
@@ -167,6 +191,7 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
 
 
 # because i love history, appendixes, and appending things
@@ -205,3 +230,5 @@ setopt nonomatch
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/home/parm/.lmstudio/bin"
 
+# === ATUIN SHELL HISTORY (add this at the end) ===
+eval "$(atuin init zsh)"
