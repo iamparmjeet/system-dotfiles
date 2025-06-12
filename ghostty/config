@@ -42,15 +42,15 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-theme = carbonfox
+theme = catppuccin-mocha
 font-size = 12
 font-family = "JetBrainsMono Nerd Font"
 
 background-blur-radius = 20
 mouse-hide-while-typing = true
-window-decoration = true
+window-decoration = false
 gtk-titlebar = true
 window-theme = ghostty
 # keybind = global:cmd+/=toggle_quick_terminal
-background-opacity = 0.7
+background-opacity = 0.8
 background-blur-radius = 20
