@@ -1,12 +1,17 @@
 adw-gtk-theme-git
 appimage-appimage
 archlinux-tweak-tool-git
+lazydocker-bin
 lima
+localsend-bin
 mongodb-compass-bin
+obsidian-bin
 oh-my-posh
 remnote
 sofirem-git
+ttf-ia-writer
 ttf-monaco
 ttf-rubik-vf
 ttf-victor-mono
+ufw-docker
 yay-debug
