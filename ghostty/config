@@ -6,7 +6,7 @@ font-size = 12
 font-family = "JetBrainsMono Nerd Font"
 
 # Window Appearance
-window-decoration = "none"
+#window-decoration = "none"
 background-opacity = 0.8
 background-blur-radius = 200
 

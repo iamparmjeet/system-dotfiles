@@ -226,3 +226,8 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
         exec tmux new-session -s "$SESSION_NAME" -c "$(pwd)"
     fi
 fi
+
+# bun completions
+[ -s "/home/parm/.bun/_bun" ] && source "/home/parm/.bun/_bun"
+alias lzd='lazydocker'
+# eval "$(~/.local/share/mise activate zsh)"

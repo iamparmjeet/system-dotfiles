@@ -1,0 +1,12 @@
+adw-gtk-theme-git
+appimage-appimage
+archlinux-tweak-tool-git
+lima
+mongodb-compass-bin
+oh-my-posh
+remnote
+sofirem-git
+ttf-monaco
+ttf-rubik-vf
+ttf-victor-mono
+yay-debug
