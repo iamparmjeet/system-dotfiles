@@ -1,0 +1,176 @@
+first we need to edit hyprland monitors conf
+
+# Primary external monitor
+monitor=DP-1,3840x2160@60,0x0,1
+
+# Laptop monitor (position it to the right of the external display)
+monitor=eDP-1,1920x1080@60,3840x0,1
+
+# Rule to disable the laptop display if it's the only one detected (unplugged external)
+# This is a fallback and can be helpful, but the lid-close script is more direct.
+monitor=eDP-1,preferred,auto,1,mirror,DP-1 # Example of mirroring if you ever want that
+
+sudo pacman -S acpi
+
+sudo systemctl enable acpid
+sudo systemctl start acpid
+
+then create hypr/scripts/handle_lid.sh
+
+chmod +x ~/.config/hypr/scripts/handle_lid.sh
+
+Here is the code 
+
+#!/bin/bash
+
+USER_LOGIN_NAME="parm"
+LAPTOP_MONITOR="eDP-1"
+EXTERNAL_MONITOR="HDMI-A-1"
+
+LOG_FILE="/tmp/lid_event_debug.log"
+
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
+get_hyprland_signature() {
+    local user_uid
+    user_uid=$(id -u "$USER_LOGIN_NAME" 2>>"$LOG_FILE")
+
+    if [ -z "$user_uid" ]; then
+        log_message "get_hyprland_signature: CRITICAL - Could not determine UID for user '$USER_LOGIN_NAME'."
+        return 1
+    fi
+    log_message "get_hyprland_signature: Determined UID for '$USER_LOGIN_NAME' is '$user_uid'."
+
+    local user_xdg_runtime_dir="/run/user/$user_uid"
+    local hypr_instance_base_dir="$user_xdg_runtime_dir/hypr"
+
+    log_message "get_hyprland_signature: Constructed XDG_RUNTIME_DIR: '$user_xdg_runtime_dir'."
+    log_message "get_hyprland_signature: Attempting to find signature in '$hypr_instance_base_dir'."
+
+    if [ ! -d "$hypr_instance_base_dir" ]; then
+        log_message "get_hyprland_signature: Directory '$hypr_instance_base_dir' does NOT exist."
+        hypr_instance_base_dir="/tmp/hypr"
+        log_message "get_hyprland_signature: Falling back to check '$hypr_instance_base_dir'."
+        if [ ! -d "$hypr_instance_base_dir" ]; then
+            log_message "get_hyprland_signature: Fallback directory '$hypr_instance_base_dir' also does NOT exist."
+            return 1
+        fi
+    fi
+
+    log_message "get_hyprland_signature: Using directory '$hypr_instance_base_dir'. Contents:"
+    ls -la "$hypr_instance_base_dir" >> "$LOG_FILE" 2>&1
+
+    local found_signature
+    found_signature=$(find "$hypr_instance_base_dir" -maxdepth 1 -mindepth 1 -type d -printf "%f\n" -quit 2>>"$LOG_FILE")
+
+    if [ -n "$found_signature" ]; then
+        log_message "get_hyprland_signature: Found signature: '$found_signature' (this is the directory name)"
+        echo "$found_signature"
+        return 0
+    else
+        log_message "get_hyprland_signature: 'find' command did not return a signature from '$hypr_instance_base_dir'."
+        return 1
+    fi
+}
+
+log_message "--- Lid event script started. Arguments: $* ---"
+
+CACHED_HYPRLAND_SIGNATURE=$(get_hyprland_signature)
+
+if [ -z "$CACHED_HYPRLAND_SIGNATURE" ]; then
+    log_message "CRITICAL: HYPRLAND_INSTANCE_SIGNATURE could not be determined. Check /tmp/hypr/ directory."
+else
+    log_message "Determined HYPRLAND_INSTANCE_SIGNATURE: '$CACHED_HYPRLAND_SIGNATURE'"
+fi
+
+is_monitor_active_hypr() {
+    local monitor_name="$1"
+
+    if [ -z "$CACHED_HYPRLAND_SIGNATURE" ]; then
+        log_message "is_monitor_active_hypr: Cannot check monitor '$monitor_name', signature is missing."
+        return 1
+    fi
+
+    log_message "is_monitor_active_hypr: Checking $monitor_name with signature '$CACHED_HYPRLAND_SIGNATURE' for user '$USER_LOGIN_NAME'"
+    if sudo -u "$USER_LOGIN_NAME" \
+       env DISPLAY=:0 \
+       env XDG_RUNTIME_DIR="/run/user/$(id -u "$USER_LOGIN_NAME")" \
+       env HYPRLAND_INSTANCE_SIGNATURE="$CACHED_HYPRLAND_SIGNATURE" \
+       hyprctl monitors -j | jq -e ".[] | select(.name == \"$monitor_name\" and .disabled == false and .dpmsStatus == true)" > /dev/null; then
+        log_message "is_monitor_active_hypr: Monitor '$monitor_name' is connected, not disabled, and DPMS active."
+        return 0
+    else
+        log_message "is_monitor_active_hypr: Monitor '$monitor_name' is NOT active or not found with current hyprctl check."
+        return 1
+    fi
+}
+
+LID_STATE=""
+if echo "$*" | grep -q "close"; then
+    LID_STATE="closed"
+elif echo "$*" | grep -q "open"; then
+    LID_STATE="opened"
+fi
+log_message "Detected Lid State: '$LID_STATE' from input: $*"
+
+if [[ "$LID_STATE" == "closed" ]]; then
+    log_message "Lid reported as closed."
+    if is_monitor_active_hypr "$EXTERNAL_MONITOR"; then
+        log_message "External monitor ($EXTERNAL_MONITOR) IS active. Disabling laptop monitor ($LAPTOP_MONITOR)."
+        if [ -n "$CACHED_HYPRLAND_SIGNATURE" ]; then
+            sudo -u "$USER_LOGIN_NAME" \
+               env DISPLAY=:0 \
+               env XDG_RUNTIME_DIR="/run/user/$(id -u "$USER_LOGIN_NAME")" \
+               env HYPRLAND_INSTANCE_SIGNATURE="$CACHED_HYPRLAND_SIGNATURE" \
+               hyprctl keyword monitor "$LAPTOP_MONITOR,disable"
+            log_message "hyprctl command to disable '$LAPTOP_MONITOR' sent."
+        else
+            log_message "Cannot send hyprctl disable for '$LAPTOP_MONITOR': signature missing."
+            log_message "Suspending due to missing signature and lid close with presumed external monitor."
+            sleep 1
+            systemctl suspend
+        fi
+    else
+        log_message "External monitor ($EXTERNAL_MONITOR) is NOT active (or signature missing for check). Suspending system."
+        sleep 1
+        systemctl suspend
+    fi
+elif [[ "$LID_STATE" == "opened" ]]; then
+    log_message "Lid reported as opened. Enabling laptop monitor ($LAPTOP_MONITOR)."
+    if [ -n "$CACHED_HYPRLAND_SIGNATURE" ]; then
+        sudo -u "$USER_LOGIN_NAME" \
+           env DISPLAY=:0 \
+           env XDG_RUNTIME_DIR="/run/user/$(id -u "$USER_LOGIN_NAME")" \
+           env HYPRLAND_INSTANCE_SIGNATURE="$CACHED_HYPRLAND_SIGNATURE" \
+           hyprctl keyword monitor "$LAPTOP_MONITOR,preferred,auto,1"
+        log_message "hyprctl command to enable '$LAPTOP_MONITOR' sent."
+    else
+        log_message "Cannot send hyprctl enable for '$LAPTOP_MONITOR': signature missing."
+    fi
+else
+    log_message "Unknown lid state or event not parsed correctly from: '$*'"
+fi
+
+log_message "--- Lid event script finished ---"
+exit 0
+
+// Code ends here
+
+Now we create acpid laptop-lid event
+
+sudo touch /etc/acpi/events/laptop-lid
+
+sudo vim /etc/acpi/events/laptop-lid
+
+paste this code below
+
+event=button/lid.*
+action=/usr/bin/bash /home/parm/.config/hypr/scripts/handle_lid.sh %e
+
+// code ends here
+
+sudo systemctl restart acpid
+
+hyprctl reload
