@@ -151,7 +151,7 @@
     "spacing": 12
   },
   "custom/benq-brightness": {
-    "interval": 2,
+    "interval": 1,
     "exec": "/home/parm/.local/bin/benq-brightness.sh show",
     "tooltip": false,
     "on-scroll-up": "/home/parm/.local/bin/benq-brightness.sh up",
@@ -159,7 +159,7 @@
   
   },
   "custom/laptop-brightness": {
-    "interval": 2,
+    "interval": 1,
     "exec": "/home/parm/.local/bin/lap-brightness show",
     "tooltip": false,
     "on-scroll-up": "/home/parm/.local/bin/lap-brightness up",
