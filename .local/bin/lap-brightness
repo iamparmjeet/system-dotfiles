@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# ~/.local/bin/lap-brightness
+set -euo pipefail
+
+STEP="${STEP:-10}" # percent
+
+# Parse brightnessctl -m CSV: name,class,cur,perc,max
+read -r _ _ CUR PCT MAX < <(brightnessctl -m | tr -d '%' | tr ',' ' ')
+# Compute new raw target
+case "${1:-show}" in
+show)
+  echo "${PCT}%"
+  exit 0
+  ;;
+up)
+  TARGET=$((CUR + (STEP * MAX) / 100))
+  ;;
+down)
+  TARGET=$((CUR - (STEP * MAX) / 100))
+  # allow going to near-black when close to zero
+  if ((TARGET < (MAX / 100))); then
+    TARGET=1
+  fi
+  ;;
+set)
+  VAL=${2:?percent 0-100 required}
+  TARGET=$(((VAL * MAX + 50) / 100))
+  ;;
+min)
+  TARGET=1
+  ;;
+*)
+  echo "Usage: lap-brightness {show|up|down|set 0-100|min}" >&2
+  exit 2
+  ;;
+esac
+
+# Clamp and apply
+((TARGET < 1)) && TARGET=1
+((TARGET > MAX)) && TARGET=MAX
+brightnessctl set "$TARGET" >/dev/null
+# Show percent after set
+read -r _ _ _ PCT _ < <(brightnessctl -m | tr -d '%' | tr ',' ' ')
+echo "${PCT}%"

@@ -129,7 +129,7 @@ alias la='eza --icons --git -la'
 alias lt='eza --icons --git --tree'
 
 # --- Arch Linux ---
-alias update='sudo pacman -Syyu'
+#alias update='sudo pacman -Syyu'
 alias list="sudo pacman -Qqe"      # All explicitly installed packages
 alias listt="sudo pacman -Qqet"     # Explicitly installed, no dependencies
 alias listaur="sudo pacman -Qqem"   # AUR packages
@@ -173,24 +173,14 @@ alias lzd='lazydocker'
 # EXPORTS & PATH
 # ------------------------------------------------------------------------------
 
-# --- NVM ---
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+update() {
+  sudo -k
+  # authenticate first in a quiet context so fingerprint works reliably
+  sudo -v || return 1
+  # now run pacman; use -Syu normally (drop the double -y unless you intentionally need it)
+  sudo pacman -Syu "$@"
+}
 
-# --- Bun ---
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# --- pnpm ---
-export PNPM_HOME="/home/parm/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-# --- LM Studio ---
-export PATH="$PATH:/home/parm/.lmstudio/bin"
 
 # --- Tmux ---
 export TMUX_CONFIG="$HOME/.config/tmux/tmux.conf"
@@ -222,6 +212,3 @@ if [[ "$TERM" == "xterm-ghostty" ]] && command -v tmux &> /dev/null && [ -z "$TM
     fi
 fi
 
-# bun completions
-[ -s "/home/parm/.bun/_bun" ] && source "/home/parm/.bun/_bun"
-# eval "$(~/.local/share/mise activate zsh)"
