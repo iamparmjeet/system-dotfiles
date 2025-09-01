@@ -1,13 +1,14 @@
 first we need to edit hyprland monitors conf
 
 # Primary external monitor
-monitor=DP-1,2560x1440@60,0x0,1
+monitor=HDMI-A-1,2560x1440@60,0x0,1
 
 # Laptop monitor (position it to the right of the external display)
 monitor=eDP-1,1920x1080@60,2560x0,1
 
 # Rule to disable the laptop display if it's the only one detected (unplugged external)
 # This is a fallback and can be helpful, but the lid-close script is more direct.
+
 monitor=eDP-1,preferred,auto,1,mirror,DP-1 # Example of mirroring if you ever want that
 
 sudo pacman -S acpid
