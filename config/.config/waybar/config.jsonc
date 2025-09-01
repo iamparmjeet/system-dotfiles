@@ -99,7 +99,7 @@
   },
   "battery": {
     "format": "{capacity}% {icon}",
-    "format-discharging": "{icon}",
+    "format-discharging": "{capacity}% {icon}",
     "format-charging": "{icon}",
     "format-plugged": "",
     "format-icons": {
@@ -160,9 +160,9 @@
   },
   "custom/laptop-brightness": {
     "interval": 1,
-    "exec": "/home/parm/.local/bin/lap-brightness show",
+    "exec": "/home/parm/.local/bin/lap-brightness",
     "tooltip": false,
     "on-scroll-up": "/home/parm/.local/bin/lap-brightness up",
-    "on-scroll-down": "/home/parm/.local/bin/lap-brightness down"
+    "on-scroll-down": "/home/parm/.local/bin/lap-brightness down",
   },
 }

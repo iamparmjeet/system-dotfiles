@@ -212,3 +212,4 @@ if [[ "$TERM" == "xterm-ghostty" ]] && command -v tmux &> /dev/null && [ -z "$TM
     fi
 fi
 
+eval "$(/usr/bin/mise activate zsh)"
