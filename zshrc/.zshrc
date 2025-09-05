@@ -134,6 +134,8 @@ alias list="sudo pacman -Qqe"      # All explicitly installed packages
 alias listt="sudo pacman -Qqet"     # Explicitly installed, no dependencies
 alias listaur="sudo pacman -Qqem"   # AUR packages
 alias probe="sudo archlinux-probe"
+alias add="sudo pacman -S"
+alias addy="yay -S"
 
 # --- BTRFS ---
 alias btrfsfs="sudo btrfs filesystem df /"
