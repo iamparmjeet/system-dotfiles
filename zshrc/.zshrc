@@ -136,6 +136,7 @@ alias listaur="sudo pacman -Qqem"   # AUR packages
 alias probe="sudo archlinux-probe"
 alias add="sudo pacman -S"
 alias addy="yay -S"
+alias remove="sudo pacman -Rns"
 
 # --- BTRFS ---
 alias btrfsfs="sudo btrfs filesystem df /"
@@ -215,3 +216,5 @@ if [[ "$TERM" == "xterm-ghostty" ]] && command -v tmux &> /dev/null && [ -z "$TM
 fi
 
 eval "$(/usr/bin/mise activate zsh)"
+
+. "$HOME/.local/share/../bin/env"
