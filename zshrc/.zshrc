@@ -188,7 +188,7 @@ update() {
 # --- Tmux ---
 export TMUX_CONFIG="$HOME/.config/tmux/tmux.conf"
 alias tmux="tmux -f $TMUX_CONFIG"
-
+alias zed="/usr/bin/zeditor"
 # ------------------------------------------------------------------------------
 # FINAL INITIALIZATIONS
 # ------------------------------------------------------------------------------
