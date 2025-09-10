@@ -169,6 +169,9 @@ alias prs='pnpm run start'
 alias plg='pnpm list -g --depth=0'
 alias pc='pnpm create'
 
+alias bd='bun run dev'
+
+
 alias lzd='lazydocker'
 
 
