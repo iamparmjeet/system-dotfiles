@@ -3,7 +3,7 @@
 # Prints icon+percent on show/up/down/set, silent if no monitor.
 set -euo pipefail
 
-BUS="${MON_BUS:-1}"
+BUS="${MON_BUS:-3}"
 STEP="${STEP:-10}" # percent step
 ACTION="${1:-show}"
 VALUE="${2:-}"

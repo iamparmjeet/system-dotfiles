@@ -8,141 +8,141 @@
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 
 # Download Zinit if it's not there yet
-if [ ! -d "$ZINIT_HOME" ]; then
-  mkdir -p "$(dirname "$ZINIT_HOME")"
-  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+if [[ -s "$ZINIT_HOME/zinit.zsh" ]]; then
+  source "$ZINIT_HOME/zinit.zsh"
+else
+  print "⚠️ Zinit not found at $ZINIT_HOME"
 fi
-
-# Source Zinit
-source "${ZINIT_HOME}/zinit.zsh"
 
 # ------------------------------------------------------------------------------
 # PLUGINS & SNIPPETS (Loaded with Zinit)
 # ------------------------------------------------------------------------------
 
 # --- Core Plugins ---
-zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit light Aloxaf/fzf-tab
 zinit light wfxr/forgit # Interactive git commands with fzf
 zinit light MichaelAquilina/zsh-you-should-use # Alias reminders
-zinit light ntnyq/omz-plugin-pnpm
 
-# --- Oh My Zsh Snippets (for aliases and functions) ---
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
-zinit snippet OMZP::aws
-zinit snippet OMZP::kubectl
-zinit snippet OMZP::kubectx
-zinit snippet OMZP::command-not-found
-zinit snippet OMZP::docker
-zinit snippet OMZP::podman
-zinit snippet OMZP::github
-zinit snippet OMZP::mongo-atlas
-zinit snippet OMZP::mongocli
-zinit snippet OMZP::node
-zinit snippet OMZP::postgres
-zinit snippet OMZP::python
-zinit snippet OMZP::tmux
-zinit snippet OMZP::bun
-# zinit snippet OMZP::pnpm
+# Syntax highlighting — this must be LAST
+zinit light zsh-users/zsh-syntax-highlighting
 
 # ------------------------------------------------------------------------------
-# SHELL OPTIONS (setopt)
+# COMPLETION SYSTEM
 # ------------------------------------------------------------------------------
 
-# Change directory without typing 'cd'
-# setopt AUTO_CD
+autoload -Uz compinit
+# Use cached compdump to speed up startup
+if [[ ! -f ~/.zcompdump || ~/.zcompdump -nt ~/.zshrc ]]; then
+  compinit
+else
+  compinit -C
+fi
 
-# Don't beep on errors
+# # Source git's official zsh wrapper, if available
+# if [[ -f /usr/share/git/completion/git-completion.zsh ]]; then
+#   source /usr/share/git/completion/git-completion.zsh
+# fi
+
+# Native completions instead of OMZP snippets
+(( $+commands[kubectl] )) && source <(kubectl completion zsh)
+(( $+commands[docker] )) && source <(docker completion zsh)
+(( $+commands[podman] )) && source <(podman completion zsh)
+
+zi lucid load'![[ $MYPROMPT = 8 ]]' unload'![[ $MYPROMPT != 8 ]]' \
+  atload'!_zsh_git_prompt_precmd_hook' nocd for \
+    woefe/git-prompt.zsh
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+
+# Fzf-tab previews (careful with --tree for big dirs)
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --icons --tree --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --icons --tree --color=always $realpath'
+
+
+# ------------------------------------------------------------------------------
+# SHELL OPTIONS
+# ------------------------------------------------------------------------------
+setopt prompt_subst
+setopt autocd
+setopt auto_menu menu_complete
+setopt globdots
+setopt always_to_end
 setopt NO_BEEP
-
-# Don't exit zsh if a command can't find a match
 setopt NO_NOMATCH
-
-# When a process is put in the background, don't print its status immediately
 setopt NO_NOTIFY
-
-# Use extended pattern matching features
 setopt EXTENDED_GLOB
+setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt INTERACTIVE_COMMENTS
+setopt COMPLETE_IN_WORD
 
 # ------------------------------------------------------------------------------
-# HISTORY
+# HISTORY (native, Atuin will override if enabled)
 # ------------------------------------------------------------------------------
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt APPEND_HISTORY       # Append to history file
-setopt EXTENDED_HISTORY     # Add timestamps to history
-setopt SHARE_HISTORY        # Share history between sessions
-setopt HIST_IGNORE_ALL_DUPS # If a new command is a duplicate, remove the older one
-setopt HIST_SAVE_NO_DUPS    # Don't save duplicate entries in the history file
-setopt HIST_FIND_NO_DUPS    # Don't show duplicates when searching
-setopt HIST_IGNORE_SPACE    # Don't save commands starting with a space
 
-# ------------------------------------------------------------------------------
-# COMPLETIONS
-# ------------------------------------------------------------------------------
-
-# Load and initialize the completion system
-autoload -Uz compinit && compinit
-
-# --- Completion Styling ---
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-
-# --- fzf-tab preview settings with eza ---
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --icons --tree --color=always $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --icons --tree --color=always $realpath'
 
 # ------------------------------------------------------------------------------
 # KEYBINDINGS
 # ------------------------------------------------------------------------------
 
-bindkey -e # Use emacs keybindings
+bindkey -e                               # emacs keybindings
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
-bindkey '^[[A' up-line-or-search   # Up arrow
-bindkey '^[[B' down-line-or-search # Down arrow
+bindkey '^[[A' up-line-or-search
+bindkey '^[[B' down-line-or-search
+
+
 
 # ------------------------------------------------------------------------------
 # ALIASES
 # ------------------------------------------------------------------------------
 
-# --- General ---
 alias c='clear'
-alias ff="fastfetch"
-alias omp="oh-my-posh"
-alias ssn="sudo shutdown now"
-alias sr="reboot"
-alias sysfailed="systemctl list-units --failed"
+alias ff='fastfetch'
+alias omp='oh-my-posh'
 
-# --- Navigation & Files (using eza) ---
+# Files & navigation
 alias ls='eza --icons --git'
 alias ll='eza --icons --git -l'
 alias la='eza --icons --git -la'
 alias lt='eza --icons --git --tree'
 
-# --- Arch Linux ---
-#alias update='sudo pacman -Syyu'
-alias list="sudo pacman -Qqe"      # All explicitly installed packages
-alias listt="sudo pacman -Qqet"     # Explicitly installed, no dependencies
-alias listaur="sudo pacman -Qqem"   # AUR packages
-alias probe="sudo archlinux-probe"
+# System
+alias ssn='sudo shutdown now'
+alias sr='reboot'
+alias sysfailed='systemctl list-units --failed'
+
+# Arch Linux shortcuts
+alias list="pacman -Qqe"
+alias listt="pacman -Qqet"
+alias listaur="pacman -Qqem"
+alias probe="archlinux-probe"
 alias add="sudo pacman -S"
 alias addy="yay -S"
 alias remove="sudo pacman -Rns"
+alias update="sudo pacman -Syu"
+alias updatey="yay -Syu"
 
-# --- BTRFS ---
+# BTRFS
 alias btrfsfs="sudo btrfs filesystem df /"
 alias btrfsli="sudo btrfs su li / -t"
 
-# --- Package Management ---
+# Node package managers
 alias ni='npm i'
 alias nid='npm i -D'
 alias nig='npm i -g'
@@ -150,43 +150,125 @@ alias nr='npm run'
 alias nrb='npm run build'
 alias nrd='npm run dev'
 alias nrs='npm run start'
-alias nlg='npm list -g --depth=0'
-
 alias ya='yarn add'
 alias yad='yarn add -D'
 alias yb='yarn build'
 alias yd='yarn dev'
 alias ys='yarn start'
-alias yyb='yarn && yarn build'
-alias yyd='yarn && yarn dev'
-alias ylg='yarn global list'
-
 alias pi='pnpm i'
 alias pid='pnpm i -D'
 alias prb='pnpm run build'
 alias prd='pnpm run dev'
 alias prs='pnpm run start'
-alias plg='pnpm list -g --depth=0'
 alias pc='pnpm create'
-
 alias bd='bun run dev'
 
-
 alias lzd='lazydocker'
+
+# Youtube
+
+ytdl() {
+  local quality=$1
+  local url=$2
+  local output="%(title)s.%(ext)s"
+
+  # If URL is a playlist, add playlist index to filenames
+  [[ "$url" == *"playlist"* ]] && output="%(playlist_index)02d-%(title)s.%(ext)s"
+
+  case "$quality" in
+    audio)  yt-dlp -f 251 -x --audio-format mp3 -o "$output" "$url" ;;
+    480)    yt-dlp -f 135+251 -o "$output" "$url" ;;
+    720)    yt-dlp -f 136+251 -o "$output" "$url" ;;
+    1080)   yt-dlp -f 137+251 -o "$output" "$url" ;;
+    1440)   yt-dlp -f 271+251 -o "$output" "$url" ;;
+    *)
+      echo "Usage: ytdl [audio|480|720|1080|1440] <url>"
+      ;;
+  esac
+}
+
+extract-audio() {
+  local format=$1
+  shift
+  local target="$*"
+
+  if [[ -z "$format" || -z "$target" ]]; then
+    echo "Usage: extract-audio <mp3|m4a|flac|copy> <file-or-folder>"
+    return 1
+  fi
+
+  local codec ext
+
+  case "$format" in
+    mp3)   codec=(-vn -acodec libmp3lame -q:a 2) ext="mp3"  ;;
+    m4a)   codec=(-vn -c:a aac -b:a 192k)        ext="m4a" ;;
+    flac)  codec=(-vn -c:a flac)                 ext="flac" ;;
+    copy)  codec=(-vn -c:a copy)                 ext="m4a"  ;;
+    *)
+      echo "Unsupported format: $format"
+      return 1
+      ;;
+  esac
+
+  if [[ -f "$target" ]]; then
+    local outfile="${target%.*}.$ext"
+    ffmpeg -i "$target" "${codec[@]}" "$outfile"
+
+  elif [[ -d "$target" ]]; then
+    for f in "$target"/*.{mp4,mkv,webm}; do
+      [[ -e "$f" ]] || continue
+      local outfile="${f%.*}.$ext"
+      ffmpeg -i "$f" "${codec[@]}" "$outfile"
+    done
+
+  else
+    echo "Error: $target not found"
+    return 1
+  fi
+}
+# --- Oh My Zsh Snippets (for aliases and functions) ---
+# Nvim OPTIONS
+
+alias nvim-lazy="NVIM_APPNAME=LazyVim nvim"
+alias nvim-kick="NVIM_APPNAME=kickstart nvim"
+alias nvim-chad="NVIM_APPNAME=NvChad"
+alias nvim-astro="NVIM_APPNAME=AstroNvim nvim"
+
+function nvims() {
+  items=("default" "kickstart" "LazyVim" "NvChad" "AstroNvim")
+  config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
+  if [[ -z $config ]]; then
+    echo "Nothing selected"
+    return 0
+  elif [[ $config == "default" ]]; then
+    config=""
+  fi
+  NVIM_APPNAME=$config nvim $@
+}
+
+bindkey -s '^A' "nvims\n"
+
+# zinit snippet OMZP::git
+zinit snippet OMZP::github
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::github
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::aws
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::mongo-atlas
+zinit snippet OMZP::mongocli
+zinit snippet OMZP::node
+zinit snippet OMZP::postgres
+zinit snippet OMZP::python
+zinit snippet OMZP::tmux
+zinit snippet OMZP::bun
+
 
 
 # ------------------------------------------------------------------------------
 # EXPORTS & PATH
 # ------------------------------------------------------------------------------
-
-update() {
-  sudo -k
-  # authenticate first in a quiet context so fingerprint works reliably
-  sudo -v || return 1
-  # now run pacman; use -Syu normally (drop the double -y unless you intentionally need it)
-  sudo pacman -Syu "$@"
-}
-
 
 # --- Tmux ---
 export TMUX_CONFIG="$HOME/.config/tmux/tmux.conf"
@@ -196,28 +278,44 @@ alias zed="/usr/bin/zeditor"
 # FINAL INITIALIZATIONS
 # ------------------------------------------------------------------------------
 
-# --- Shell Integrations ---
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd z zsh)"
-eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/themes/stelbent.minimal.omp.json)"
+# ------------------------------------------------------------------------------
+# SHELL INTEGRATIONS
+# ------------------------------------------------------------------------------
+#
+(( $+commands[fzf] )) && eval "$(fzf --zsh)"
+(( $+commands[zoxide] )) && eval "$(zoxide init --cmd z zsh)"
+(( $+commands[oh-my-posh] )) && eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/themes/stelbent.minimal.omp.json)"
+(( $+commands[atuin] )) && eval "$(atuin init zsh)"
+(( $+commands[mise] )) && eval "$(/usr/bin/mise activate zsh)"
 
-# --- Atuin Shell History ---
-eval "$(atuin init zsh)"
-
-# --- Startup Commands ---
+# ------------------------------------------------------------------------------
+# STARTUP COMMANDS
+# ------------------------------------------------------------------------------
 fastfetch
+# ------------------------------------------------------------------------------
+# TMUX AUTO-START (Optional: better in ~/.zlogin)
+# ------------------------------------------------------------------------------
 
-# --- Auto-start Tmux only in Ghostty ---
 if [[ "$TERM" == "xterm-ghostty" ]] && command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-    SESSION_NAME="main"
-    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-        tmux new-window -t "$SESSION_NAME": -c "$(pwd)"
-        exec tmux attach-session -t "$SESSION_NAME"
-    else
-        exec tmux new-session -s "$SESSION_NAME" -c "$(pwd)"
-    fi
+  SESSION_NAME="main"
+  if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+    tmux new-window -t "$SESSION_NAME": -c "$(pwd)"
+    exec tmux attach-session -t "$SESSION_NAME"
+  else
+    exec tmux new-session -s "$SESSION_NAME" -c "$(pwd)"
+  fi
 fi
 
-eval "$(/usr/bin/mise activate zsh)"
+# ------------------------------------------------------------------------------
+# PROFILING (uncomment to debug slow startup)
+# ------------------------------------------------------------------------------
+# zmodload zsh/zprof
+# At end it will auto-run: zprof
 
-. "$HOME/.local/share/../bin/env"
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/parm/.lmstudio/bin"
+# End of LM Studio CLI section
+
+
+# Shopify Hydrogen alias to local projects
+alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
