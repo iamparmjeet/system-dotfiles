@@ -132,11 +132,13 @@ alias list="pacman -Qqe"
 alias listt="pacman -Qqet"
 alias listaur="pacman -Qqem"
 alias probe="archlinux-probe"
-alias add="sudo pacman -S"
-alias addy="yay -S"
-alias remove="sudo pacman -Rns"
-alias update="sudo pacman -Syu"
-alias updatey="yay -Syu"
+alias a="sudo pacman -S"
+alias ay="yay -S"
+alias ap="paru -S"
+alias r="sudo pacman -Rns"
+alias u="sudo pacman -Syu"
+alias uy="yay -Syu"
+alias up="paru -Syu"
 
 # BTRFS
 alias btrfsfs="sudo btrfs filesystem df /"
@@ -316,7 +318,4 @@ fi
 export PATH="$PATH:/home/parm/.lmstudio/bin"
 # End of LM Studio CLI section
 
-
-# Shopify Hydrogen alias to local projects
-alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
 ### End of Zinit's installer chunk
