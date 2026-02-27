@@ -167,6 +167,22 @@ alias bd='bun run dev'
 
 alias lzd='lazydocker'
 
+# Directories
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Tools
+alias c='opencode'
+alias cx='printf "\033[2J\033[3J\033[H" && claude --allow-dangerously-skip-permissions'
+alias d='docker'
+alias r='rails'
+alias t='tmux attach || tmux new -s Work'
+n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
+
+# functions
+for f in $OMARCHY_PATH/default/bash/fns/*; do source "$f"; done
+
 # Youtube
 
 ytdl() {
@@ -178,11 +194,11 @@ ytdl() {
   [[ "$url" == *"playlist"* ]] && output="%(playlist_index)02d-%(title)s.%(ext)s"
 
   case "$quality" in
-    audio)  yt-dlp -f 251 -x --audio-format mp3 -o "$output" "$url" ;;
-    480)    yt-dlp -f 135+251 -o "$output" "$url" ;;
-    720)    yt-dlp -f 136+251 -o "$output" "$url" ;;
-    1080)   yt-dlp -f 137+251 -o "$output" "$url" ;;
-    1440)   yt-dlp -f 271+251 -o "$output" "$url" ;;
+    a)  yt-dlp -f 251 -x --audio-format mp3 -o "$output" "$url" ;;
+    4)    yt-dlp -f 135+251 -o "$output" "$url" ;;
+    7)    yt-dlp -f 136+251 -o "$output" "$url" ;;
+    10)   yt-dlp -f 137+251 -o "$output" "$url" ;;
+    14)   yt-dlp -f 271+251 -o "$output" "$url" ;;
     *)
       echo "Usage: ytdl [audio|480|720|1080|1440] <url>"
       ;;
@@ -314,6 +330,13 @@ fi
 # zmodload zsh/zprof
 # At end it will auto-run: zprof
 
+# Force makepkg to use Arch system Python
+export PYTHON=/usr/bin/python
+
+#AI
+
+alias lc="llama-cli"
+alias ol="ollama"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/home/parm/.lmstudio/bin"
 # End of LM Studio CLI section
