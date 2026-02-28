@@ -173,10 +173,9 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # Tools
-alias c='opencode'
+alias oc='opencode'
 alias cx='printf "\033[2J\033[3J\033[H" && claude --allow-dangerously-skip-permissions'
 alias d='docker'
-alias r='rails'
 alias t='tmux attach || tmux new -s Work'
 n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
 
