@@ -107,6 +107,8 @@ bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
 
 
+unalias ga gd
+
 
 # ------------------------------------------------------------------------------
 # ALIASES
@@ -341,3 +343,6 @@ export PATH="$PATH:/home/parm/.lmstudio/bin"
 # End of LM Studio CLI section
 
 ### End of Zinit's installer chunk
+### End of Zinit's installer chunk
+alias docker-start="sudo systemctl start docker containerd"
+alias docker-stop="sudo systemctl stop docker containerd"
