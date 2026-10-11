@@ -23,6 +23,8 @@ Steps (each one optional, safe to re-run; anything replaced goes to `~/.restore-
 7. **Secrets** - copies `.env*` / `.dev.vars*` back from the SSD backup (they are never in git).
 
 ## Before resetting
+`./backup-agents.sh /run/media/$USER/AMAR_WD/PARM/System-Reset-<date>` copies Claude/Codex/OpenCode chats, T3 threads and Basic Memory to the SSD (consistent SQLite snapshots). Unpack with `agents/RESTORE-chats.md`.
+
 ```bash
 ~/system-dotfiles/backup.sh   # refresh package snapshot, AGENTS.md, hooks, skills, units
 git -C ~/system-dotfiles diff # review, then commit and push
