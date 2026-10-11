@@ -1,0 +1,9 @@
+{
+  "futureDays": 60,
+  "gwsPath": "/home/parm/.local/share/gws/lib/node_modules/@googleworkspace/cli/run.js",
+  "gwsSha256": "15ab1bf9506a63201feba50335ec6e0a0fcfd1a781e69139e43193b38ea8c0b0",
+  "pastDays": 7,
+  "syncIntervalMin": 15,
+  "tasklistIds": [],
+  "timezone": "Asia/Kolkata"
+}

@@ -1,0 +1,28 @@
+#!/bin/bash
+# Records a snapshot whenever the T3 backend is slow or unreachable.
+URL=${T3_URL:-http}://127.0.0.1:3773/.well-known/t3/environment
+OUT=${T3_OUT:-$HOME/.t3/stall-log}
+SLOW=2
+while true; do
+  # Skip while T3 is closed or still starting (the first 90 s are not a stall).
+  t3=$(pgrep -ox t3code) || { sleep 30; continue; }
+  (( $(ps -o etimes= -p "$t3") < 90 )) && { sleep 30; continue; }
+  out=$(curl -s -o /dev/null -m 5 -w '%{http_code} %{time_total}' "$URL")
+  code=${out% *}; t=${out#* }
+  if [[ $code != 200 ]] || awk -v t="$t" -v s="$SLOW" 'BEGIN{exit !(t>s)}'; then
+    f=$OUT/stall-$(date +%Y%m%d-%H%M%S).txt
+    pid=$(ss -ltnpH 'sport = :3773' 2>/dev/null | grep -oP 'pid=\K[0-9]+' | head -1)
+    {
+      echo "curl: code=$code time=${t}s"; date; uptime
+      echo "== PSI"; for r in cpu memory io; do echo "$r: $(head -1 /proc/pressure/$r)"; done
+      echo "== free"; free -m
+      echo "== backend pid=$pid"; [[ -n $pid ]] && { ps -o pid,etime,rss,pcpu,stat,wchan:20,args -p "$pid" | cut -c1-200; echo "-- threads"; top -H -b -n1 -p "$pid" 2>/dev/null | sed -n 7,16p; echo "-- fds: $(ls /proc/$pid/fd 2>/dev/null | wc -l)"; }
+      echo "== top cpu"; ps -eo pid,pcpu,rss,stat,etime,args --sort=-pcpu | head -12 | cut -c1-180
+      echo "== top rss"; ps -eo pid,pcpu,rss,stat,etime,args --sort=-rss | head -8 | cut -c1-180
+      echo "== D-state"; ps -eo pid,stat,wchan:20,args | awk '$2 ~ /D/' | head -10 | cut -c1-160
+      echo "== db files"; ls -l "$HOME"/.t3/userdata/statev2.sqlite* 2>/dev/null
+    } > "$f" 2>&1
+    ls -1t "$OUT"/stall-*.txt | tail -n +101 | xargs -r rm -f
+  fi
+  sleep 30
+done

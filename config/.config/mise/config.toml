@@ -1,0 +1,13 @@
+[tools]
+antigravity-cli = "latest"
+bun = "latest"
+deno = "latest"
+go = "latest"
+node = "latest"
+"npm:playwright" = "latest"
+pnpm = "latest"
+python = "latest"
+rust = "latest"
+
+[settings.upgrade]
+auto_prune = true

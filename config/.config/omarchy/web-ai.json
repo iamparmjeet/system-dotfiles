@@ -1,0 +1,27 @@
+{
+  "browser": {
+    "command": "helium-browser",
+    "profileDirectory": "Default"
+  },
+  "panel": {
+    "widthRatio": 0.25,
+    "heightRatio": 0.9,
+    "edgeGap": 18
+  },
+  "providers": {
+    "chatgpt": {
+      "name": "ChatGPT",
+      "appUrl": "https://chatgpt.com/",
+      "historyUrl": "https://chatgpt.com/",
+      "windowClass": "local-web-ai-chatgpt",
+      "workspace": "web-ai-chatgpt"
+    },
+    "claude": {
+      "name": "Claude",
+      "appUrl": "https://claude.ai/new",
+      "historyUrl": "https://claude.ai/",
+      "windowClass": "local-web-ai-claude",
+      "workspace": "web-ai-claude"
+    }
+  }
+}

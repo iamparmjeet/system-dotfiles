@@ -1,0 +1,185 @@
+{
+  "bar": {
+    "centerAnchor": "parm.clock",
+    "layout": {
+      "center": [
+        {
+          "alwaysShow": false,
+          "id": "omarchy.indicators",
+          "items": []
+        },
+        {
+          "id": "omarchy.system-update"
+        },
+        {
+          "id": "omarchy.microphone"
+        },
+        {
+          "id": "omarchy.elsewhen",
+          "units": "C",
+          "zones": "Kolkata|Asia/Kolkata, Tokyo|Asia/Tokyo, New York|America/New_York, London|Europe/London, Berlin|Europe/Berlin, San Francisco|America/Los_Angeles",
+          "homeCity": "Delhi"
+        },
+        {
+          "compactExpanded": false,
+          "defaultView": "expanded",
+          "id": "parm.clock",
+          "panelView": "month",
+          "showCompletedTasks": true,
+          "showTaskBadge": true,
+          "syncIntervalMin": 240
+        },
+        {
+          "alertsEnabled": true,
+          "id": "io.github.calebhat.weather",
+          "unit": "metric"
+        }
+      ],
+      "left": [
+        {
+          "id": "omarchy.menu"
+        },
+        {
+          "id": "omarchy.workspaces"
+        },
+        {
+          "id": "luca.obsidian-daily"
+        },
+        {
+          "id": "tristonarmstrong.dictionary"
+        },
+        {
+          "id": "local.media-wave"
+        }
+      ],
+      "right": [
+        {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
+          "id": "so.den",
+          "widgets": [
+            "djjeane.docker-monitor"
+          ]
+        },
+        {
+          "id": "local.cpu-ram"
+        },
+        {
+          "id": "parm.agents",
+          "syncMode": "On"
+        },
+        {
+          "id": "ch.wertstifter.tyme"
+        },
+        {
+          "id": "shavanced.notification-center"
+        },
+        {
+          "id": "omarchy.bluetooth"
+        },
+        {
+          "id": "omarchy.network"
+        },
+        {
+          "id": "omarchy.audio"
+        },
+        {
+          "id": "omarchy.monitor"
+        },
+        {
+          "id": "omarchy.power"
+        }
+      ]
+    },
+    "position": "top",
+    "transparent": true
+  },
+  "cloneSourceRestores": [
+    "io.github.sirjul1337.lock-explorer"
+  ],
+  "disabledPlugins": [
+    "omarchy.lock",
+    "omarchy.dev-gallery"
+  ],
+  "idle": {
+    "lock": 900,
+    "screensaver": 600
+  },
+  "plugins": [
+    {
+      "id": "local.web-ai"
+    },
+    {
+      "id": "shell.settings"
+    },
+    {
+      "design": "calendar",
+      "id": "io.github.sirjul1337.lock-explorer"
+    },
+    {
+      "id": "rdf.dock",
+      "items": [
+        {
+          "exec": "",
+          "glyph": "󰀻",
+          "label": "Menu"
+        },
+        {
+          "spacer": true
+        },
+        {
+          "exec": "omarchy launch terminal",
+          "glyph": "",
+          "label": "Terminal"
+        },
+        {
+          "desktop": "org.kde.kate",
+          "label": "Kate"
+        },
+        {
+          "desktop": "org.gnome.Nautilus",
+          "label": "Files"
+        },
+        {
+          "desktop": "Open Video Downloader",
+          "label": "Open Video Downloader"
+        },
+        {
+          "spacer": true
+        },
+        {
+          "desktop": "zen"
+        },
+        {
+          "desktop": "t3code"
+        },
+        {
+          "desktop": "obsidian"
+        },
+        {
+          "desktop": "com.t3tools.T3Code"
+        }
+      ]
+    },
+    {
+      "id": "agx.screen-time"
+    },
+    {
+      "id": "stappmus.activity-monitor"
+    },
+    {
+      "id": "panadestein.lexicon"
+    },
+    {
+      "id": "yoyo.system-tidy"
+    },
+    {
+      "id": "dev.git"
+    },
+    {
+      "id": "djjeane.docker-monitor"
+    }
+  ],
+  "version": 1
+}

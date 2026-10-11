@@ -1,0 +1,47 @@
+#!/bin/bash
+# Rewrite T3's state DB as a NOCOW file so btrfs stops fragmenting it.
+# Run from a normal terminal with T3 completely closed. Keeps the old file as a backup.
+set -euo pipefail
+D=$HOME/.t3/userdata
+DB=$D/statev2.sqlite
+
+pgrep -x t3code >/dev/null && { echo "T3 is still running. Quit it completely first."; exit 1; }
+[[ $(findmnt -no FSTYPE -T "$D") == btrfs ]] || { echo "Not btrfs, nothing to do."; exit 0; }
+[[ ! -e $DB.cow-backup ]] || { echo "$DB.cow-backup already exists. Move it away first."; exit 1; }
+
+need=$(( $(stat -c %s "$DB") * 2 ))
+avail=$(df -B1 --output=avail "$D" | tail -1)
+(( avail > need )) || { echo "Not enough free space."; exit 1; }
+
+echo "extents before: $(filefrag "$DB" | awk '{print $2}')"
+
+# Fold the WAL into the main file; abort if anything is still using the DB.
+python3 -I - "$DB" <<'PY'
+import sqlite3, sys
+c = sqlite3.connect(sys.argv[1])
+busy, _, _ = c.execute("pragma wal_checkpoint(truncate)").fetchone()
+c.close()
+sys.exit(1 if busy else 0)
+PY
+[[ ! -s $DB-wal ]] || { echo "WAL not empty, aborting."; exit 1; }
+rm -f "$DB-wal" "$DB-shm"
+
+chattr +C "$D"                     # files created in this directory from now on are NOCOW
+mv "$DB" "$DB.cow-backup"
+cp --reflink=never "$DB.cow-backup" "$DB"
+
+echo "attributes: $(lsattr "$DB" | cut -c1-20)   (a 'C' means NOCOW)"
+echo "extents after: $(filefrag "$DB" | awk '{print $2}')"
+
+result=$(python3 -I - "$DB" <<'PY'
+import sqlite3, sys
+c = sqlite3.connect("file:%s?mode=ro" % sys.argv[1], uri=True)
+print(c.execute("pragma quick_check").fetchone()[0])
+PY
+)
+if [[ $result == ok ]]; then
+  echo "integrity: ok. Start T3. Delete $DB.cow-backup after a few stable days."
+else
+  echo "integrity check FAILED ($result). Restoring the original."
+  rm -f "$DB"; mv "$DB.cow-backup" "$DB"; exit 1
+fi

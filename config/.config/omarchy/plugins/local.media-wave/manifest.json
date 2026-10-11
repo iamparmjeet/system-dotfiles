@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "local.media-wave",
+  "name": "Media Wave",
+  "version": "1.2.0",
+  "author": "Local",
+  "description": "Compact MPRIS previous, play/pause, and next controls without track metadata.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "Media Wave",
+    "description": "Small waveform-style media controls with no now-playing text.",
+    "category": "Media",
+    "allowMultiple": false,
+    "defaults": {
+      "showArtwork": true
+    },
+    "schema": [
+      {
+        "key": "showArtwork",
+        "type": "boolean",
+        "label": "Show artwork",
+        "description": "Show the media thumbnail in the popup card.",
+        "defaultValue": true
+      }
+    ]
+  }
+}

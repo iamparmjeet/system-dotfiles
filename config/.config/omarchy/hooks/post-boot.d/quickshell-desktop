@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Current Omarchy starts its shell from the default Hyprland autostart:
+# quickshell -n -p $OMARCHY_PATH/shell
+#
+# This legacy hook used to launch `qs -c desktop`, which does not provide the
+# current omarchy-shell IPC used by the menu and theme switcher.
+exit 0
