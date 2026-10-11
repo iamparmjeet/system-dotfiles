@@ -49,6 +49,7 @@ fi
 (( $+commands[kubectl] )) && source <(kubectl completion zsh)
 (( $+commands[docker] )) && source <(docker completion zsh)
 (( $+commands[podman] )) && source <(podman completion zsh)
+(( $+commands[gh] )) && source <(gh completion -s zsh)
 
 zi lucid load'![[ $MYPROMPT = 8 ]]' unload'![[ $MYPROMPT != 8 ]]' \
   atload'!_zsh_git_prompt_precmd_hook' nocd for \
@@ -195,10 +196,8 @@ function nvims() {
 bindkey -s '^A' "nvims\n"
 
 # zinit snippet OMZP::git
-zinit snippet OMZP::github
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::github
 zinit snippet OMZP::archlinux
 zinit snippet OMZP::aws
 zinit snippet OMZP::command-not-found
@@ -290,5 +289,3 @@ export PATH="/home/parm/.cache/.bun/bin:$PATH"
 # Added by codebase-memory-mcp install
 export PATH="/home/parm/.local/bin:$PATH"
 
-# opencode
-export PATH=/home/parm/.opencode/bin:$PATH
