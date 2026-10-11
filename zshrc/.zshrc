@@ -116,7 +116,6 @@ unalias ga gd
 
 alias c='clear'
 alias ff='fastfetch'
-alias omp='oh-my-posh'
 
 # Files & navigation
 alias ls='eza --icons --git'
@@ -154,17 +153,6 @@ alias nr='npm run'
 alias nrb='npm run build'
 alias nrd='npm run dev'
 alias nrs='npm run start'
-alias ya='yarn add'
-alias yad='yarn add -D'
-alias yb='yarn build'
-alias yd='yarn dev'
-alias ys='yarn start'
-alias pi='pnpm i'
-alias pid='pnpm i -D'
-alias prb='pnpm run build'
-alias prd='pnpm run dev'
-alias prs='pnpm run start'
-alias pc='pnpm create'
 alias bd='bun run dev'
 
 alias lzd='lazydocker'
@@ -184,67 +172,6 @@ n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
 # functions
 for f in $OMARCHY_PATH/default/bash/fns/*; do source "$f"; done
 
-# Youtube
-
-ytdl() {
-  local quality=$1
-  local url=$2
-  local output="%(title)s.%(ext)s"
-
-  # If URL is a playlist, add playlist index to filenames
-  [[ "$url" == *"playlist"* ]] && output="%(playlist_index)02d-%(title)s.%(ext)s"
-
-  case "$quality" in
-    a)  yt-dlp -f 251 -x --audio-format mp3 -o "$output" "$url" ;;
-    4)    yt-dlp -f 135+251 -o "$output" "$url" ;;
-    7)    yt-dlp -f 136+251 -o "$output" "$url" ;;
-    10)   yt-dlp -f 137+251 -o "$output" "$url" ;;
-    14)   yt-dlp -f 271+251 -o "$output" "$url" ;;
-    *)
-      echo "Usage: ytdl [audio|480|720|1080|1440] <url>"
-      ;;
-  esac
-}
-
-extract-audio() {
-  local format=$1
-  shift
-  local target="$*"
-
-  if [[ -z "$format" || -z "$target" ]]; then
-    echo "Usage: extract-audio <mp3|m4a|flac|copy> <file-or-folder>"
-    return 1
-  fi
-
-  local codec ext
-
-  case "$format" in
-    mp3)   codec=(-vn -acodec libmp3lame -q:a 2) ext="mp3"  ;;
-    m4a)   codec=(-vn -c:a aac -b:a 192k)        ext="m4a" ;;
-    flac)  codec=(-vn -c:a flac)                 ext="flac" ;;
-    copy)  codec=(-vn -c:a copy)                 ext="m4a"  ;;
-    *)
-      echo "Unsupported format: $format"
-      return 1
-      ;;
-  esac
-
-  if [[ -f "$target" ]]; then
-    local outfile="${target%.*}.$ext"
-    ffmpeg -i "$target" "${codec[@]}" "$outfile"
-
-  elif [[ -d "$target" ]]; then
-    for f in "$target"/*.{mp4,mkv,webm}; do
-      [[ -e "$f" ]] || continue
-      local outfile="${f%.*}.$ext"
-      ffmpeg -i "$f" "${codec[@]}" "$outfile"
-    done
-
-  else
-    echo "Error: $target not found"
-    return 1
-  fi
-}
 # --- Oh My Zsh Snippets (for aliases and functions) ---
 # Nvim OPTIONS
 
@@ -346,3 +273,22 @@ export PATH="$PATH:/home/parm/.lmstudio/bin"
 ### End of Zinit's installer chunk
 alias docker-start="sudo systemctl start docker containerd"
 alias docker-stop="sudo systemctl stop docker containerd"
+
+
+
+# Pi
+export PATH="/home/parm/.local/share/mise/installs/node/26.8.1/bin:$PATH"
+
+# Deepseek harnes
+export PATH="/home/parm/.cache/.bun/bin:$PATH"
+
+. "$HOME/.local/share/../bin/env"
+
+# bun completions
+[ -s "/tmp/bun-1.3.13/_bun" ] && source "/tmp/bun-1.3.13/_bun"
+
+# Added by codebase-memory-mcp install
+export PATH="/home/parm/.local/bin:$PATH"
+
+# opencode
+export PATH=/home/parm/.opencode/bin:$PATH
