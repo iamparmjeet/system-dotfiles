@@ -1,0 +1,13 @@
+# Shell and terminal
+zsh
+stow
+atuin
+oh-my-posh
+alacritty
+neovim
+vim
+ex-vi-compat
+tree
+pass
+khal
+vdirsyncer

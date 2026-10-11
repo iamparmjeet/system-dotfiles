@@ -1,0 +1,20 @@
+# Development
+github-cli
+go
+mise-bin
+podman
+ollama
+cloudflared
+google-cloud-cli
+postman-bin
+sqlitebrowser
+visual-studio-code-bin
+zed
+zcode-desktop-bin
+openai-codex-desktop
+herdr
+t3code-nightly-bin
+libvips
+xmlstarlet
+squashfs-tools
+bind

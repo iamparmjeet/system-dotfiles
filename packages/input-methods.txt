@@ -1,0 +1,5 @@
+# Chinese / Japanese / Korean input
+fcitx5-chewing
+fcitx5-chinese-addons
+fcitx5-hangul
+fcitx5-mozc

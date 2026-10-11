@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh cross-harness context every 15 minutes
+
+[Timer]
+OnStartupSec=3min
+OnUnitInactiveSec=15min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

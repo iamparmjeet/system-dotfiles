@@ -1,0 +1,9 @@
+[Unit]
+Description=Distill recent agent chats into the shared Basic Memory profile
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I %h/.agents/hooks/agent-memory.py learn
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin
+Nice=10
+TimeoutStartSec=30min

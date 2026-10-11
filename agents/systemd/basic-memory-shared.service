@@ -1,0 +1,19 @@
+[Unit]
+Description=Shared Basic Memory MCP for Claude, Codex and OpenCode
+After=network.target
+
+[Service]
+Type=simple
+Environment=BASIC_MEMORY_CONFIG_DIR=%h/.config/basic-memory
+Environment=OMP_NUM_THREADS=2
+Environment=TOKENIZERS_PARALLELISM=false
+ExecStart=%h/.local/bin/basic-memory mcp --transport streamable-http --host 127.0.0.1 --port 8765 --project main
+Restart=on-failure
+RestartSec=5
+MemoryAccounting=true
+MemoryHigh=512M
+MemoryMax=768M
+UMask=0077
+
+[Install]
+WantedBy=default.target

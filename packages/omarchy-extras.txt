@@ -1,0 +1,13 @@
+# Omarchy add-ons
+omarchy-seamless-login
+monologue
+omacalc
+omasnap
+omazed
+owe
+owe-lockfeed
+voxtype-bin
+openlogi-bin
+ttfx
+omarchy-dev
+omarchy-settings-dev

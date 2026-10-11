@@ -1,0 +1,4 @@
+# Browsers
+brave-bin
+helium-browser-bin
+zen-browser-bin

@@ -1,0 +1,10 @@
+diagnose-crash	/usr/share/omarchy/default/agents/skills/diagnose-crash
+frontend-design	$HOME/.claude/plugins/marketplaces/claude-plugins-official/plugins/frontend-design/skills/frontend-design
+interview-prep	$HOME/Code/parm-skills/skills/interview-prep
+knowledge-note-mapping	$HOME/Code/parm-skills/skills/knowledge-note-mapping
+learn-dsa-with-ai	$HOME/Code/parm-skills/skills/learn-dsa-with-ai
+learn-with-ai	$HOME/Code/parm-skills/skills/learn-with-ai
+lifeos-log	$HOME/Code/parm-skills/skills/lifeos-log
+omarchy-app	/usr/share/omarchy/default/agents/skills/omarchy-app
+omarchy	/usr/share/omarchy/default/agents/skills/omarchy
+ship-loop	$HOME/Code/parm-skills/skills/ship-loop

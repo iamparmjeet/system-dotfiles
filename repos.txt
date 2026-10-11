@@ -1,0 +1,11 @@
+# Repos cloned by restore.sh ("Clone my code repos"). Format: <github repo>  <path under $HOME>
+iamparmjeet/skills                          Code/parm-skills
+iamparmjeet/rently                          Code/Projects/rently
+iamparmjeet/himrix                          Code/Projects/Himrix
+iamparmjeet/schooly-app                     Code/Projects/School
+iamparmjeet/PageOwl                         Code/Projects/Blog-CMS
+iamparmjeet/omarchy-google-calendar-clock   Code/Projects/omarchy-google-calendar-clock
+iamparmjeet/pipe                            Code/Projects/pipe
+iamparmjeet/obsidian-daily-qs               Code/Projects/obsidian-daily-qs
+iamparmjeet/t3code                          Code/T3Code/t3code
+iamparmjeet/basic-memory                    basic-memory

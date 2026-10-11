@@ -1,0 +1,18 @@
+# Desktop apps
+kate
+gwenview
+qt6-imageformats
+foliate
+readest
+kiwix-desktop
+vlc
+vlc-plugins-all
+mupdf
+xpdf
+freedownloadmanager-bin
+open-video-downloader-bin
+gliff
+libqalculate
+qrencode
+zbar
+otf-apple-sf-mono

@@ -1,0 +1,13 @@
+# Installed here but intentionally not restored (KDE leftovers, base system bits Omarchy installs itself)
+dolphin
+archlinux-xdg-menu
+appimage-manager-plasma
+kvantum-theme-catppuccin-git
+qt6ct-kde
+papirus-icon-theme
+linux-omarchy
+linux-omarchy-headers
+omarchy-keyring
+intel-ucode
+efibootmgr
+sudo
