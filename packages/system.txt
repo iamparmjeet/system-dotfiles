@@ -1,5 +1,4 @@
 # Hardware and system tools
-linux-lts-headers
 fwupd
 nvme-cli
 ddcutil
@@ -7,6 +6,7 @@ swayosd
 matugen
 usbguard
 opensnitch
-cups-pk-helper
 disktree-bin
 dtop-bin
+mkinitcpio
+usbutils

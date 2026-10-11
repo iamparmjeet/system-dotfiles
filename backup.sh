@@ -10,7 +10,7 @@ say() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 
 # --- packages --------------------------------------------------------------
 say "Package list"
-omarchy_pkgs=$(cat "$HOME"/.local/share/omarchy/install/omarchy-*.packages 2>/dev/null | grep -v '^#' | awk '{print $1}' | sort -u)
+omarchy_pkgs=$(cat /usr/share/omarchy/install/omarchy-*.packages 2>/dev/null | grep -v '^#' | awk '{print $1}' | sort -u)
 comm -23 <(pacman -Qqe | sort) <(echo "$omarchy_pkgs") > "$REPO/packages/.installed-snapshot.txt"
 listed=$(cat "$REPO"/packages/*.txt "$REPO"/packages/skip.list 2>/dev/null | sed 's/#.*//' | awk 'NF{print $1}' | sort -u)
 new=$(comm -23 "$REPO/packages/.installed-snapshot.txt" <(echo "$listed"))

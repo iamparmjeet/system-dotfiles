@@ -1,4 +1,2 @@
 # VMs and boot media
-virtualbox
 gnome-boxes
-ventoy-bin

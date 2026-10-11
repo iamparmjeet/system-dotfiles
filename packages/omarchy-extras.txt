@@ -7,7 +7,6 @@ omazed
 owe
 owe-lockfeed
 voxtype-bin
-openlogi-bin
 ttfx
 omarchy-dev
 omarchy-settings-dev

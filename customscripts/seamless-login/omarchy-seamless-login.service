@@ -1,4 +1,3 @@
-sudo tee /etc/systemd/system/omarchy-seamless-login.service <<'EOF'
 [Unit]
 Description=Omarchy Seamless Auto-Login
 After=systemd-user-sessions.service getty@tty1.service systemd-logind.service
@@ -7,10 +6,10 @@ PartOf=graphical.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/seamless-login uwsm start -- hyprland.desktop
+ExecStart=/usr/local/bin/seamless-login uwsm start -g -1 -e -D Hyprland hyprland.desktop
 Restart=always
 RestartSec=2
-User=parm   # change if needed
+User=parm
 TTYPath=/dev/tty1
 TTYReset=yes
 TTYVHangup=yes
@@ -22,4 +21,3 @@ PAMName=login
 
 [Install]
 WantedBy=graphical.target
-EOF
