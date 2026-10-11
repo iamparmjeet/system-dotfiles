@@ -1,5 +1,4 @@
 # Omarchy add-ons
-omarchy-seamless-login
 monologue
 omacalc
 omasnap
@@ -7,6 +6,7 @@ omazed
 owe
 owe-lockfeed
 voxtype-bin
+noise-suppression-for-voice
 ttfx
 omarchy-dev
 omarchy-settings-dev

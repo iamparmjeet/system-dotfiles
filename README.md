@@ -22,6 +22,20 @@ Steps (each one optional, safe to re-run; anything replaced goes to `~/.restore-
 6. **Code repos** - clones everything in `repos.txt`.
 7. **Secrets** - copies `.env*` / `.dev.vars*` back from the SSD backup (they are never in git).
 
+## After restore (manual)
+- **Seamless login** (no package exists for it): `sudo bash customscripts/seamless-login/install.sh`, then reboot.
+- **Dictation**: Voxtype runs Whisper `large-v3-turbo` on the GPU, loading the model only while dictating
+  (`on_demand_loading` + `gpu_isolation`, ~140 MB idle), and records from an RNNoise-filtered mic
+  (`pipewire.conf.d/99-input-denoising.conf` + `voxtype.service.d/denoise.conf`).
+  ```bash
+  voxtype setup --download                 # fetches the model named in the config (~1.6 GB)
+  sudo voxtype setup gpu --enable          # Vulkan on the Iris Xe
+  systemctl --user restart pipewire pipewire-pulse wireplumber
+  systemctl --user daemon-reload && systemctl --user enable --now voxtype
+  wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.65   # 100% clips the built-in mic
+  ```
+  Keys: hold Right Alt or F9, or toggle with Super + Ctrl + X.
+
 ## Before resetting
 `./backup-agents.sh /run/media/$USER/AMAR_WD/PARM/System-Reset-<date>` copies Claude/Codex/OpenCode chats, T3 threads and Basic Memory to the SSD (consistent SQLite snapshots). Unpack with `agents/RESTORE-chats.md`.
 

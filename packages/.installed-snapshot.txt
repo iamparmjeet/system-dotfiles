@@ -21,6 +21,7 @@ libqalculate
 matugen
 mkinitcpio
 mupdf
+noise-suppression-for-voice
 nvme-cli
 obs-studio
 oh-my-posh
